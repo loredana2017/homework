@@ -1,9 +1,13 @@
 package org.example;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TestNGSelenium extends BrowserSetup {
 
@@ -25,6 +29,25 @@ public class TestNGSelenium extends BrowserSetup {
         System.out.println("Test_S2 header 2");
         WebElement header = driver.findElement(By.xpath("//*[@class='main-header']"));
         Assert.assertEquals(header.getText(), "Elements");
+    }
+    @Test
+    public void testDatePicker(){
+        System.out.println("testDatePicker");
+        openURL("https://demoqa.com/date-picker");
+
+        WebElement datePicker = driver.findElement(By.id("datePickerMonthYearInput"));
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        LocalDateTime dateNow = LocalDateTime.now();
+
+        System.out.println(dateFormat.format(dateNow));
+        Assert.assertEquals(datePicker.getAttribute("value"), dateFormat.format(dateNow));
+
+        datePicker.click();
+        datePicker.sendKeys(Keys.chord(Keys.CONTROL,"a",Keys.DELETE));
+
+        datePicker.sendKeys("01/01/2023");
+        Assert.assertEquals(datePicker.getAttribute("value"), "01/01/2023");
     }
 
 }
